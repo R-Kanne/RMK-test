@@ -1,5 +1,17 @@
+import random
+
 # Time by which Rita must arrive, in seconds from midnight (9:05 AM).
 MEETING_TIME = 9 * 3600 + 5 * 60
+
+# Bus arrival times at Zoo stop (in seconds from midnight)
+BUS_SCHEDULE_ZOO = [
+    8 * 3600 + 5 * 60,   # 08:05 → 29100 seconds
+    8 * 3600 + 16 * 60,  # 08:16 → 29760
+    8 * 3600 + 28 * 60,  # 08:28 → 30480
+    8 * 3600 + 38 * 60,  # 08:38 → 31140
+    8 * 3600 + 48 * 60,  # 08:48 → 31800
+    8 * 3600 + 59 * 60   # 08:59 → 32340
+]
 
 
 def generate_bus_ride_time():
@@ -7,10 +19,21 @@ def generate_bus_ride_time():
     Returns how long the bus drives in seconds.
     """
 
-def generate_wait_for_bus():
+def generate_wait_for_bus() -> int:
     """
     Returns how long Rita has to wait for the bus in seconds
     """
+    return int(random.triangular(0, 120, 0))
+
+def get_next_bus_time(ritas_arrival) -> int | None:
+    """
+    This function takes as argument Rita's arrival at the zoo station and returns the next available bus time based on bus schedule
+    """
+    for time in BUS_SCHEDULE_ZOO:
+        if ritas_arrival <= time:
+            return time
+    return None # All busses where missed
+    
 
 
 
@@ -20,6 +43,8 @@ def simulate_single_journey(departure_time: int, ) -> bool   :
     Returns True if Rita is late, False otherwise.
     """
     to_bus_stop = 300   # Seconds
+    rita_arrived_at_zoo_stop = departure_time + to_bus_stop  # Seconds
+    departure_from_zoo = get_next_bus_time(rita_arrived_at_zoo_stop)    # Seconds
     wait_for_bus = generate_wait_for_bus()  # Seconds
     bus_ride_time = generate_bus_ride_time()    # Seconds
     from_bus_to_meeting = 240   # Seconds
