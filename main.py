@@ -16,10 +16,14 @@ BUS_SCHEDULE_ZOO = [
 
 def generate_bus_ride_time():
     """
-    Returns how long the bus drives in seconds.
+    Returns how long the bus ride takes, in seconds.
+    Typically around 10 minutes, can vary between 8 and 12.
+    The typical ride time is based around 10 minutes and 45 seconds,
+    to model the fact that bus is realistically a little more likely to be late than early.
     """
+    return int(random.triangular(480, 720, 645))
 
-def generate_wait_for_bus() -> int:
+def generate_bus_delay() -> int:
     """
     Returns how long Rita has to wait for the bus in seconds
     """
@@ -37,22 +41,34 @@ def get_next_bus_time(ritas_arrival) -> int | None:
 
 
 
-def simulate_single_journey(departure_time: int, ) -> bool   :
+def simulate_single_journey(departure_time: int) -> bool:
     """
-    Simulate a single journey starting at `departure_time`.
-    Returns True if Rita is late, False otherwise.
+    Simulates a single journey starting at `departure_time` (in seconds from midnight).
+    Returns True if Rita is late to her 9:05 AM meeting, False otherwise.
     """
-    to_bus_stop = 300   # Seconds
-    rita_arrived_at_zoo_stop = departure_time + to_bus_stop  # Seconds
-    departure_from_zoo = get_next_bus_time(rita_arrived_at_zoo_stop)    # Seconds
-    wait_for_bus = generate_wait_for_bus()  # Seconds
-    bus_ride_time = generate_bus_ride_time()    # Seconds
-    from_bus_to_meeting = 240   # Seconds
 
-    total_trip_time = to_bus_stop + wait_for_bus + bus_ride_time + from_bus_to_meeting  # Seconds
-    arrival_time = departure_time + total_trip_time    # Seconds
+    TO_BUS_STOP = 300  # Fixed time from home to bus stop (5 minutes)
+    FROM_BUS_TO_MEETING = 240  # Walk from bus stop to meeting (4 minutes)
+
+    # Arrival at Zoo stop
+    rita_arrived_at_zoo = departure_time + TO_BUS_STOP
+
+    # Finding the next scheduled bus
+    scheduled_bus_time = get_next_bus_time(rita_arrived_at_zoo)
+    if scheduled_bus_time is None:
+        return True  # No more buses → Rita is late
+
+    # Waiting time, delay and bus ride time
+    wait_for_bus = scheduled_bus_time - rita_arrived_at_zoo
+    bus_delay = generate_bus_delay()
+    bus_ride_time = generate_bus_ride_time()
+
+    # Total travel time and arrival
+    total_time = TO_BUS_STOP + wait_for_bus + bus_delay + bus_ride_time + FROM_BUS_TO_MEETING
+    arrival_time = departure_time + total_time
 
     return arrival_time > MEETING_TIME
+
 
 
 
