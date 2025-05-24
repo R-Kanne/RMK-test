@@ -2,6 +2,7 @@ import random
 from typing import List, Tuple
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
+import sys
 
 
 # Time by which Rita must arrive, in seconds from midnight (9:05 AM).
@@ -19,13 +20,12 @@ BUS_SCHEDULE_ZOO = [
 
 def format_time(seconds: int) -> str:
     """
-    Function to help with seconds formatting when printing the results
+    Function that helps format seconds from midnight into hours and minutes for plotting and printing results
     """
-   # return str(datetime.timedelta(seconds=seconds))[:-3]  # Strip microseconds
     return (datetime(2000, 1, 1) + timedelta(seconds=seconds)).strftime('%H:%M')
 
 
-def generate_bus_ride_time():
+def generate_bus_ride_time() -> int:
     """
     Returns how long the bus ride takes, in seconds.
     Typically around 10 minutes, can vary between 8 and 12.
@@ -124,7 +124,7 @@ def run_simulation_over_range(start_time, end_time, step_minutes, num_simulation
 def main():
     """
     Main entry point: sets parameters, calls simulation functions,
-    outputs or plots results.
+    outputs and plots results.
     """
     START = 7 * 3600 + 45 * 60   # 07:45
     END = 8 * 3600 + 50 * 60     # 08:50
@@ -133,27 +133,26 @@ def main():
 
     results = run_simulation_over_range(START, END, STEP, N_SIMULATIONS)
 
-    #for dep_time, prob in results:
-     #   print(f"Departure at {format_time(dep_time)} → Probability of being late: {prob:.2%}")
+    for dep_time, prob in results:
+        print(f"Departure at {format_time(dep_time)} → Probability of being late: {prob:.2%}")
+    
+    # Creating seperate lists for departure_times and probabilities using results list of tuples.
     times = [format_time(t[0]) for t in results]
-    probs = [t[1] * 100 for t in results]  # convert to percentage
+    probs = [t[1] * 100 for t in results]  # * 100 to convert to percentages
 
+    # Creating a plot and generating a file of results.
     plt.figure(figsize=(10, 5))
     plt.plot(times, probs, marker='o')
     plt.title("Probability of Being Late vs. Departure Time")
     plt.xlabel("Departure Time")
     plt.ylabel("Probability of Being Late (%)")
-    plt.xticks(rotation=45)
+    plt.xticks(ticks=times[::2], rotation=45)
     plt.grid(True)
     plt.tight_layout()
     plt.savefig("late_probabilities.png")  # saves the figure to file
     plt.show()  # shows the figure in a window
-
-
-
-
+    return 0
 
 
 if __name__ == "__main__":
-    main()
-
+    sys.exit(main())
