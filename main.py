@@ -74,11 +74,19 @@ def simulate_single_journey(departure_time: int) -> bool:
 
 
 
-def simulations_per_departure() -> float:
+def simulations_per_departure(departure_time: int, n: int = 1000) -> float:
     """
+    Arguments: departure_time: When exactly Rita exits her house in seconds from midnight,
+                n: number of times to run single simulation.
     Runs many simulations over a single departure time.
     Returns the probability of running late as a float based on many runs.
     """
+    late_count = 0
+    for _ in range(n):
+        if simulate_single_journey(departure_time):
+            late_count += 1
+    return late_count / n
+    
 
 def run_simulation_over_range(start_time, end_time, step_minutes, num_simulations) -> List[Tuple[time, probability]]:
     """
