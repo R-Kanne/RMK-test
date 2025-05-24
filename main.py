@@ -1,4 +1,7 @@
 import random
+from typing import List, Tuple
+import datetime
+
 
 # Time by which Rita must arrive, in seconds from midnight (9:05 AM).
 MEETING_TIME = 9 * 3600 + 5 * 60
@@ -12,6 +15,9 @@ BUS_SCHEDULE_ZOO = [
     8 * 3600 + 48 * 60,  # 08:48 → 31800
     8 * 3600 + 59 * 60   # 08:59 → 32340
 ]
+
+def format_time(seconds: int) -> str:
+    return str(datetime.timedelta(seconds=seconds))[:-3]  # Strip microseconds
 
 
 def generate_bus_ride_time():
@@ -88,12 +94,20 @@ def simulations_per_departure(departure_time: int, n: int = 1000) -> float:
     return late_count / n
     
 
-def run_simulation_over_range(start_time, end_time, step_minutes, num_simulations) -> List[Tuple[time, probability]]:
+def run_simulation_over_range(start_time, end_time, step_minutes, num_simulations) -> List[Tuple[int, float]]:
     """
     Loops over departure times from start_time to end_time in increments of step_minutes.
     For each departure time calls simulation_per_departure function.
     Returns a list of tuples containing each departure times respective simulated probability.
     """
+    results = []
+    step_seconds = step_minutes * 60
+
+    for departure_time in range(start_time, end_time + 1, step_seconds):
+        probability_late = simulations_per_departure(departure_time, num_simulations)
+        results.append((departure_time, probability_late))
+
+    return results
 
 
 
@@ -106,6 +120,15 @@ def main():
     Main entry point: sets parameters, calls simulation functions,
     outputs or plots results.
     """
+    START = 7 * 3600 + 45 * 60   # 07:45
+    END = 8 * 3600 + 45 * 60     # 08:45
+    STEP = 1                     # every minute
+    N_SIMULATIONS = 1000
+
+    results = run_simulation_over_range(START, END, STEP, N_SIMULATIONS)
+
+    for dep_time, prob in results:
+        print(f"Departure at {format_time(dep_time)} → Probability of being late: {prob:.2%}")
 
 
 
