@@ -1,6 +1,5 @@
 import random
 from typing import List, Tuple
-from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import sys
 
@@ -13,8 +12,8 @@ BUS_SCHEDULE_ZOO = [
     8 * 3600 + 5 * 60,   # 08:05 → 29100 seconds
     8 * 3600 + 16 * 60,  # 08:16 → 29760
     8 * 3600 + 28 * 60,  # 08:28 → 30480
-    8 * 3600 + 38 * 60,  # 08:38 → 31140
-    8 * 3600 + 48 * 60,  # 08:48 → 31800
+    8 * 3600 + 38 * 60,  # 08:38 → 31080
+    8 * 3600 + 48 * 60,  # 08:48 → 31680
     8 * 3600 + 59 * 60   # 08:59 → 32340
 ]
 
@@ -22,7 +21,13 @@ def format_time(seconds: int) -> str:
     """
     Function that helps format seconds from midnight into hours and minutes for plotting and printing results
     """
-    return (datetime(2000, 1, 1) + timedelta(seconds=seconds)).strftime('%H:%M')
+    if seconds < 0:
+        raise ValueError("Seconds cannot be negative when formatting time from midnight.")
+
+    hours = (seconds // 3600) 
+    minutes = (seconds % 3600) // 60
+
+    return f"{hours:02d}:{minutes:02d}"
 
 
 def generate_bus_ride_time() -> int:
