@@ -151,11 +151,10 @@ def main():
     plt.title("Probability of Being Late vs. Departure Time")
     plt.xlabel("Departure Time")
     plt.ylabel("Probability of Being Late (%)")
-    plt.xticks(ticks=times[::2], rotation=45)
+    plt.xticks(ticks=times[::5], rotation=45)
     plt.grid(True)
     plt.tight_layout()
     plt.savefig("late_probabilities.png")  # saves the figure to file
-    plt.show()  # shows the figure in a window
     return 0
 
 

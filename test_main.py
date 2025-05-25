@@ -1,5 +1,5 @@
 import pytest
-from main import format_time, get_next_bus_time, BUS_SCHEDULE_ZOO, simulate_single_journey
+from main import format_time, get_next_bus_time, BUS_SCHEDULE_ZOO, generate_bus_delay, generate_bus_ride_time, simulate_single_journey
 
 def test_format_time():
     # Basic cases
@@ -61,3 +61,8 @@ def test_get_next_bus_time():
     assert get_next_bus_time(8 * 3600 + 59 * 60 + 1) is None  # Rita arrives 08:59:01 (missed last bus)
     assert get_next_bus_time(9 * 3600 + 30 * 60) is None     # Rita arrives 09:30:00 (much later)
     assert get_next_bus_time(10 * 3600 + 0 * 60) is None     # Rita arrives 10:00:00 (even later)
+
+
+def test_simulate_single_journey():
+    assert simulate_single_journey(8 * 3600) is False  # Rita starts at 08:00
+    assert simulate_single_journey(8 * 3600 + 50 * 60) is True  # Rita starts at 08:50
