@@ -77,3 +77,30 @@ def test_simulate_single_journey_ontime(mock_triangular):
     ]
     departure = 8 * 3600 + 60 * 10  # Rita starts at 08:10
     assert simulate_single_journey(departure) is False  # Rita arrives 08:31:45
+
+@unittest.mock.patch("random.triangular")
+def test_simulate_single_journey_ontime_barely0(mock_triangular):
+    mock_triangular.side_effect = [
+        59,  # Bus delay patch in seconds
+        720  # Bus ride patch in seconds
+    ]
+    departure = 8 * 3600 + 60 * 40  # Rita starts at 08:40
+    assert simulate_single_journey(departure) is False  # Rita arrives 09:04:59
+
+@unittest.mock.patch("random.triangular")
+def test_simulate_single_journey_ontime_barely1(mock_triangular):
+    mock_triangular.side_effect = [
+        60,  # Bus delay patch in seconds
+        720  # Bus ride patch in seconds
+    ]
+    departure = 8 * 3600 + 60 * 40  # Rita starts at 08:40
+    assert simulate_single_journey(departure) is False  # Rita arrives 09:05:00
+
+@unittest.mock.patch("random.triangular")
+def test_simulate_single_journey_late_barely(mock_triangular):
+    mock_triangular.side_effect = [
+        61,  # Bus delay patch in seconds
+        720  # Bus ride patch in seconds
+    ]
+    departure = 8 * 3600 + 60 * 40  # Rita starts at 08:40
+    assert simulate_single_journey(departure) is True  # Rita arrives 09:05:01

@@ -18,8 +18,16 @@ BUS_SCHEDULE_ZOO = [
 ]
 
 def format_time(seconds: int) -> str:
-    """
-    Function that helps format seconds from midnight into hours and minutes for plotting and printing results
+    """Formats seconds from midnight into HH:MM string.
+
+    Args:
+        seconds: The time in seconds from midnight.
+
+    Returns:
+        A string representation of the time in HH:MM format.
+
+    Raises:
+        ValueError: If seconds is negative.
     """
     if seconds < 0:
         raise ValueError("Seconds cannot be negative when formatting time from midnight.")
@@ -31,36 +39,56 @@ def format_time(seconds: int) -> str:
 
 
 def generate_bus_ride_time() -> int:
-    """
-    Returns how long the bus ride takes, in seconds.
-    Typically around 10 minutes, can vary between 8 and 12.
-    The typical ride time is based around 10 minutes and 45 seconds,
-    to model the fact that bus is realistically a little more likely to be late than early.
+    """Generates a random bus ride duration.
+
+    The duration is sampled from a triangular distribution.
+
+    :returns: The duration of the bus ride in seconds.
+    :rtype: int
     """
     return int(random.triangular(480, 720, 645))
 
+
 def generate_bus_delay() -> int:
-    """
-    Returns how long Rita has to wait for the bus in seconds
+    """Generates a random delay for the bus arrival.
+
+    The delay represents how long Rita has to wait for the bus beyond its
+    scheduled arrival, sampled from a triangular distribution.
+
+    :returns: The bus delay time in seconds.
+    :rtype: int
     """
     return int(random.triangular(0, 120, 0))
 
+
 def get_next_bus_time(ritas_arrival) -> int | None:
+     """Finds the next available bus time based on Rita's arrival at the zoo station.
+
+    Iterates through the predefined `BUS_SCHEDULE_ZOO` to find the first
+    scheduled bus that Rita can catch.
+
+    :param ritas_arrival: Rita's arrival time at the zoo bus stop, in seconds from midnight.
+    :type ritas_arrival: int
+    :returns: The scheduled time of the next available bus in seconds from midnight,
+              or None if all buses on the schedule have already departed before Rita's arrival.
+    :rtype: int | None
     """
-    This function takes as argument Rita's arrival at the zoo station and returns the next available bus time based on bus schedule
-    """
-    for time in BUS_SCHEDULE_ZOO:
-        if ritas_arrival <= time:
-            return time
-    return None # All busses where missed
+     for time in BUS_SCHEDULE_ZOO:
+         if ritas_arrival <= time:
+             return time
+     return None # All busses where missed
     
 
-
-
 def simulate_single_journey(departure_time: int) -> bool:
-    """
-    Simulates a single journey starting at `departure_time` (in seconds from midnight).
-    Returns True if Rita is late to her 9:05 AM meeting, False otherwise.
+    """Simulates a single journey for Rita from her home to the meeting.
+
+    This function calculates Rita's arrival time at the meeting, taking into
+    account fixed travel times, bus schedules, and random delays/ride durations.
+
+    :param departure_time: The exact time Rita exits her house, in seconds from midnight.
+    :type departure_time: int
+    :returns: True if Rita arrives late to her 9:05 AM meeting, False otherwise.
+    :rtype: bool
     """
 
     TO_BUS_STOP = 300  # Fixed time from home to bus stop (5 minutes)
@@ -86,29 +114,45 @@ def simulate_single_journey(departure_time: int) -> bool:
     return arrival_time > MEETING_TIME
 
 
-
-
-
-
 def simulations_per_departure(departure_time: int, n: int = 1000) -> float:
+     """Runs multiple simulations for a single departure time to estimate lateness probability.
+
+    This function repeatedly calls :func:`simulate_single_journey` for a given
+    departure time and calculates the proportion of times Rita is late.
+
+    :param departure_time: The exact time Rita exits her house, in seconds from midnight.
+    :type departure_time: int
+    :param n: The number of individual journey simulations to run for this departure time.
+              Defaults to 1000.
+    :type n: int
+    :returns: The estimated probability of Rita being late, as a float between 0.0 and 1.0.
+    :rtype: float
     """
-    Arguments: departure_time: When exactly Rita exits her house in seconds from midnight,
-                n: number of times to run single simulation.
-    Runs many simulations over a single departure time.
-    Returns the probability of running late as a float based on many runs.
-    """
-    late_count = 0
-    for _ in range(n):
-        if simulate_single_journey(departure_time):
-            late_count += 1
-    return late_count / n
+     late_count = 0
+     for _ in range(n):
+         if simulate_single_journey(departure_time):
+             late_count += 1
+     return late_count / n
     
 
-def run_simulation_over_range(start_time, end_time, step_minutes, num_simulations) -> List[Tuple[int, float]]:
-    """
-    Loops over departure times from start_time to end_time in increments of step_minutes.
-    For each departure time calls simulation_per_departure function.
-    Returns a list of tuples containing each departure times respective simulated probability.
+def run_simulation_over_range(start_time: int, end_time: int, step_minutes: int, num_simulations: int) -> List[Tuple[int, float]]:
+    """Runs simulations for a range of departure times and collects lateness probabilities.
+
+    This function iterates through a specified time range, calling
+    :func:`simulations_per_departure` for each increment to calculate
+    the probability of being late.
+
+    :param start_time: The initial departure time for the simulation range, in seconds from midnight.
+    :type start_time: int
+    :param end_time: The final departure time for the simulation range, in seconds from midnight.
+    :type end_time: int
+    :param step_minutes: The increment in minutes between each simulated departure time.
+    :type step_minutes: int
+    :param num_simulations: The number of individual simulations to run for each departure time.
+    :type num_simulations: int
+    :returns: A list of tuples, where each tuple contains (departure_time, probability_of_being_late).
+              Departure times are in seconds from midnight, and probabilities are floats.
+    :rtype: List[Tuple[int, float]]
     """
     results = []
     step_seconds = step_minutes * 60
@@ -121,15 +165,17 @@ def run_simulation_over_range(start_time, end_time, step_minutes, num_simulation
     return results
 
 
-
-
-
-
-
 def main():
-    """
-    Main entry point: sets parameters, calls simulation functions,
-    outputs and plots results.
+    """Main entry point for the Rita's Bus Journey simulation.
+
+    This function orchestrates the simulation by:
+    - Setting up simulation parameters (start/end times, step, number of runs).
+    - Calling :func:`run_simulation_over_range` to execute the simulations.
+    - Printing the probability of lateness for each departure time.
+    - Generating and saving a plot visualizing the results.
+
+    :returns: An exit code, typically 0 for successful execution.
+    :rtype: int
     """
     START = 7 * 3600 + 45 * 60   # 07:45
     END = 8 * 3600 + 50 * 60     # 08:50
