@@ -1,4 +1,6 @@
 import pytest
+import unittest.mock
+
 from main import format_time, get_next_bus_time, BUS_SCHEDULE_ZOO, generate_bus_delay, generate_bus_ride_time, simulate_single_journey
 
 def test_format_time():
@@ -63,6 +65,15 @@ def test_get_next_bus_time():
     assert get_next_bus_time(10 * 3600 + 0 * 60) is None     # Rita arrives 10:00:00 (even later)
 
 
-def test_simulate_single_journey():
+def test_simulate_single_journey_without_mocking():
     assert simulate_single_journey(8 * 3600) is False  # Rita starts at 08:00
     assert simulate_single_journey(8 * 3600 + 50 * 60) is True  # Rita starts at 08:50
+
+@unittest.mock.patch("random.triangular")
+def test_simulate_single_journey_ontime(mock_triangular):
+    mock_triangular.side_effect = [
+        60,  # Bus delay patch in seconds
+        645  # Bus ride patch in seconds
+    ]
+    departure = 8 * 3600 + 60 * 10  # Rita starts at 08:10
+    assert simulate_single_journey(departure) is False  # Rita arrives 08:31:45
