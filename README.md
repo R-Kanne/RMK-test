@@ -9,10 +9,18 @@ This project simulates Rita's daily bus journey to her meeting at the RMK Tallin
 ## Overall approach
 
 The project aims to implement a modular Monte Carlo Simulation, where you could easily integrate additional functions for varying degrees of randomness.
-The simulation is only as accurate as the modeled scenarios.
+The simulation is only as accurate as the modeled scenarios. The entire simulation computes values from fictional midnight in seconds. Near every value used in computing is in seconds from midnight, which means this simulation only supports computation in less than 24 hour timeframes. To modify it to multiple day simulation, fictional midnight would need to switched out for datetime objects reflecting real time.
 
 
 This solution was developed as part of the RMK Data Team Internship Test Challenge 2025.
+
+## Key modelled assumptions
+
+Rita always walks exactly five minutes from home to departure bus stop ZOO.
+The bus never leaves the station early even is it hypothetically arrives early (which is why she still always makes the last bus when she leaves 08:43).
+The bus can run late at most 2 minutes exactly.
+The bus driving time can be anywhere from 8 to 12 minutes with a bias toward the upper range.
+Rita always walks from destination bus stop to meeting exactly 4 minutes
 
 ##  Features
 
@@ -34,6 +42,7 @@ This solution was developed as part of the RMK Data Team Internship Test Challen
 * **`random`** (standard library)
 * **`matplotlib`**
 * **`pytest`**
+* **`unittest.mock`** (standard library)
 * **GitHub Actions**
 
 ---
