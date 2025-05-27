@@ -1,7 +1,7 @@
 import pytest
 import unittest.mock
 
-from main import format_time, get_next_bus_time, BUS_SCHEDULE_ZOO, generate_bus_delay, generate_bus_ride_time, simulate_single_journey
+from main import format_time, get_next_bus_time, BUS_SCHEDULE_ZOO, simulate_single_journey
 
 def test_format_time():
     # Basic cases
