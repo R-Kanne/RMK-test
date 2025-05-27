@@ -16,11 +16,11 @@ This solution was developed as part of the RMK Data Team Internship Test Challen
 
 ## Key modelled assumptions
 
-Rita always walks exactly five minutes from home to departure bus stop ZOO.
-The bus never leaves the station early even is it hypothetically arrives early (which is why she still always makes the last bus when she leaves 08:43).
-The bus can run late at most 2 minutes exactly.
-The bus driving time can be anywhere from 8 to 12 minutes with a bias toward the upper range.
-Rita always walks from destination bus stop to meeting exactly 4 minutes
+ - Rita always walks exactly five minutes from home to departure bus stop ZOO.
+ - The bus never leaves the station early even is it hypothetically arrives early (which is why she still always makes the last bus when she leaves 08:43).
+ - The bus can run late at most 2 minutes exactly.
+ - The bus driving time can be anywhere from 8 to 12 minutes with a bias toward the upper range.
+ - Rita always walks from destination bus stop to meeting exactly 4 minutes
 
 ##  Features
 
