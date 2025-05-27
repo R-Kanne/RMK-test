@@ -34,6 +34,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt 
+        pip install ruff # Install ruff here
+
+    - name: Run Ruff Linter
+      run: |
+        ruff check . # Checks all python files for style and format
 
     - name: Run tests
       run: |
