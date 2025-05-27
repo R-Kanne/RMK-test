@@ -9,7 +9,7 @@ This project simulates Rita's daily bus journey to her meeting at the RMK Tallin
 ## Overall approach
 
 The project aims to implement a modular Monte Carlo Simulation, where you could easily integrate additional functions for varying degrees of randomness.
-The simulation is only as accurate as the modeled scenarios. The entire simulation computes values from fictional midnight in seconds. Near every value used in computing is in seconds from midnight, which means this simulation only supports computation in less than 24 hour timeframes. To modify it to multiple day simulation, fictional midnight would need to switched out for datetime objects reflecting real time.
+The simulation is only as accurate as the modeled scenarios. The entire simulation computes values from fictional midnight in seconds. Near every value used in computing is in seconds from midnight, which means this simulation only supports computation in less than 24 hour timeframes. To modify it to multiple day simulation, fictional midnight would need to switched out for datetime objects reflecting real time. The bus schedule used for this simulation is based on the currently available real bus number 8 schedule from ZOO to Toompark at Tallinn.
 
 
 This solution was developed as part of the RMK Data Team Internship Test Challenge 2025.
