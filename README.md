@@ -22,6 +22,14 @@ This solution was developed as part of the RMK Data Team Internship Test Challen
  - The bus driving time can be anywhere from 8 to 12 minutes with a bias toward the upper range.
  - Rita always walks from destination bus stop to meeting exactly 4 minutes
 
+
+## Potential Expansions
+
+* The core limitation of the simulation currently lies in the quality of its input data. This simulation relies on a single official published bus schedule, which could still be inaccurate in real-world scenarios. One robust solution would be to use **bus GPS data to generate the bus schedule dynamically**. The more GPS data processed, the more precise the generated bus schedule could become.
+* More variables and generated randomness could easily be integrated into the simulation. For example: **processing real-time traffic data based on the time of day to influence bus behavior** (such as delays), or figuring out the probability of a bus breaking down, crashing, or not arriving at all.
+* The current simulation receives its inputs statically, so to speak. To move beyond this, **robust data processing pipelines could be set up to feed dynamic input to the simulation in real-time (which would also mean re-engineering how simulation handles time).**
+
+
 ##  Features
 
 * **Monte Carlo Simulation:** Uses a probabilistic simulation approach to estimate lateness probabilities.
